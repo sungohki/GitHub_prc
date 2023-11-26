@@ -1,0 +1,24 @@
+h1 {
+  text-align: center;
+  margin: 2px;
+  padding: 10px 20px;
+  background-color: blanchedalmond;
+  color: darkred;
+  border-radius: 10px;
+}
+form {
+  text-align: center;
+  font-size: 25px;
+}
+input {
+  font-size: 25px;
+  margin: 20px;
+}
+.login_inputs {
+  font-size: 25px;
+}
+#btn_login {
+  font-size: 30px;
+  width: 100px;
+  height: 50px;
+}
