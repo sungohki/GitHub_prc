@@ -7,7 +7,10 @@ function start(route, handle) {
       const pathname = url.parse(request.url).pathname;
       // const pathname = new URL(request.url);
       // 요청을 보낸 클라이언트의 url 경로를 담은 변수
-      route(pathname, handle, response);
+      const queryData = url.parse(request.url, true).query;
+      //
+
+      route(pathname, handle, response, queryData.productId);
     }
   }
 

@@ -1,5 +1,6 @@
 const fs = require('fs'); // import file sink module : 만들어둔 html을 import 가능하게 하는 모듈
-const main_view = fs.readFileSync('./main.html', 'utf-8');
+const main_view = fs.readFileSync('./main.html');
+const orderlist_view = fs.readFileSync('./orderlist.html');
 const mariadb = require('./database/connect/mariadb');
 
 function main(response) {
@@ -9,12 +10,11 @@ function main(response) {
   response.write(main_view);
   response.end();
 }
+
 function order(response, productId) {
   response.writeHead(200, { 'Content-Type': 'text/html' });
   mariadb.query(
-    `INSERT INTO orderlist VALUES ("${productId}", '${
-      new Date().toLocaleDateString
-    }');`,
+    `INSERT INTO orderlist VALUES ("${productId}", '${new Date().toLocaleDateString()}');`,
     function (err, rows) {
       console.log(rows);
     }
@@ -23,6 +23,26 @@ function order(response, productId) {
   response.end();
 }
 
+function orderlist(response) {
+  console.log('orderlist');
+
+  response.writeHead(200, { 'Content-Type': 'text/html' });
+
+  mariadb.query('SELECT * FROM orderlist', function (err, rows) {
+    response.write(orderlist_view);
+
+    rows.forEach((element) => {
+      response.write(`
+          <tr>
+            <td>${element.product_id}</td>
+            <td>${element.order_date}</td>
+          </tr>
+      `);
+    });
+    response.write('</table>');
+    response.end();
+  });
+}
 /* img function */
 function redRacket(response) {
   fs.readFile('./img/redRacket.png', function (err, data) {
@@ -52,6 +72,7 @@ let handle = {};
 /* router directory */
 handle['/'] = main;
 handle['/order'] = order;
+handle['/orderlist'] = orderlist;
 
 /* img directory */
 handle['/img/redRacket.png'] = redRacket;
